@@ -1,7 +1,6 @@
 import CardMenu from "@/components/Card";
 
 export default function Pedido() {
-
   const produtos = [
     { id: 1, name: "X-Bacon", description: "Hamburguer, bacon crocante, queijo", price: 15.9 },
     { id: 2, name: "X-Salada", description: "Hamburguer, alface, tomate, queijo", price: 14.9 },
@@ -12,23 +11,23 @@ export default function Pedido() {
   ];
 
   return (
-    <div className="p-6 bg-white text-black">
+    <div className="p-6 bg-white min-h-screen">
       {/* Título */}
-      <h1 className="text-2xl font-bold mb-1">Novo Pedido 🍔</h1>
+      <h1 className="text-2xl font-bold mb-1 text-black">Novo Pedido 🍔</h1>
       <p className="text-gray-500 mb-6">Selecione os produtos do cardápio</p>
 
       {/* Layout principal */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         {/* CARDÁPIO */}
-        <div className="md:col-span-2 border rounded-xl p-4">
-          <h2 className="text-lg font-semibold mb-1">Cardápio</h2>
+        <div className="md:col-span-2 border border-gray-300 rounded-xl p-4 bg-white">
+          <h2 className="text-lg font-semibold mb-1 text-black">Cardápio</h2>
           <p className="text-sm text-gray-500 mb-4">
             Toque nos produtos para adicionar ao pedido
           </p>
 
-          {/* GRID DE PRODUTOS */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* GRID DE PRODUTOS RESPONSIVO - máximo 2 por linha */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {produtos.map((item) => (
               <CardMenu
                 key={item.id}
@@ -41,8 +40,8 @@ export default function Pedido() {
         </div>
 
         {/* RESUMO DO PEDIDO */}
-        <div className="border rounded-xl p-4 h-fit">
-          <h2 className="text-lg font-semibold mb-4">Resumo do Pedido</h2>
+        <div className="border border-gray-300 rounded-xl p-4 h-fit bg-white">
+          <h2 className="text-lg font-semibold mb-4 text-black">Resumo do Pedido</h2>
 
           <p className="text-sm text-gray-500 text-center mb-4">
             Nenhum item adicionado
@@ -55,12 +54,12 @@ export default function Pedido() {
           <input
             type="text"
             placeholder="Ex: João Silva"
-            className="w-full border rounded-md p-2 mt-1 mb-4 text-sm"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 mb-4 text-sm bg-white text-black"
           />
 
           {/* Pagamento */}
           <label className="text-sm font-medium">Forma de Pagamento</label>
-          <select className="w-full border rounded-md p-2 mt-1 mb-4 text-sm">
+          <select className="w-full border border-gray-300 rounded-md p-2 mt-1 mb-4 text-sm bg-white text-black">
             <option>Dinheiro</option>
             <option>Cartão</option>
             <option>Pix</option>

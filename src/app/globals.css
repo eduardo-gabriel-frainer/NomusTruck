@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;   /* fundo branco */
-  --foreground: #000000;   /* todo texto preto */
+  --background: #ffffff;
+  /* fundo branco */
+  --foreground: #000000;
+  /* todo texto preto */
 }
 
 @theme inline {
@@ -12,14 +14,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* REMOVER dark mode completamente
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-*/
 
 body {
   background: var(--background);

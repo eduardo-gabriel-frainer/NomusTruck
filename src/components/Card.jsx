@@ -1,8 +1,8 @@
 export default function CardMenu({ name, description, price }) {
     return (
-        <div className="bg-white border border-black rounded-xl w-56 p-3">
+        <div className="bg-white border border-black rounded-xl w-full p-3 flex flex-col justify-between">
 
-            <h2 className="font-bold text-sm">
+            <h2 className="font-bold text-sm text-black">
                 {name}
             </h2>
 
@@ -10,8 +10,8 @@ export default function CardMenu({ name, description, price }) {
                 {description}
             </p>
 
-            <p className="font-bold text-lg mt-2">
-                {price}
+            <p className="font-bold text-lg mt-2 text-black">
+                R$ {price.toFixed(2)}
             </p>
 
         </div>

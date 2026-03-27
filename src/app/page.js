@@ -2,7 +2,7 @@ import Pedido from "./pedido/page";
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-red">
       <Pedido></Pedido>
     </div>
   );
