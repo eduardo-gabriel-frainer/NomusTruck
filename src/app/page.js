@@ -1,11 +1,9 @@
-import Image from "next/image";
-import CardMenu from "./components/Card";
+import Pedido from "./pedido/page";
 
 export default function Home() {
   return (
     <div>
-      <CardMenu name={"Coca cola"} price={15.90}></CardMenu>
-      <CardMenu name={"Pão"} price={12.90}></CardMenu>
+      <Pedido></Pedido>
     </div>
   );
 }
