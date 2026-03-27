@@ -12,7 +12,7 @@ export default function Pedido() {
   ];
 
   return (
-    <div className="p-6 bg-white">
+    <div className="p-6 bg-white text-black">
       {/* Título */}
       <h1 className="text-2xl font-bold mb-1">Novo Pedido 🍔</h1>
       <p className="text-gray-500 mb-6">Selecione os produtos do cardápio</p>
