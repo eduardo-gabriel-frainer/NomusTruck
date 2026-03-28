@@ -77,7 +77,7 @@ export default function Pedido() {
           </div>
 
           {/* Botão */}
-          <button className="w-full bg-gray-400 text-white py-2 rounded-lg">
+          <button className="w-full bg-gray-400 hover:bg-gray-600 text-white py-2 rounded-lg transition-colors duration-200">
             Finalizar Pedido
           </button>
         </div>
