@@ -1,3 +1,5 @@
+
+'use-client'
 export default function CardMenu({ name, description, price }) {
     return (
         <div className="bg-white border border-gray-300 rounded-xl w-full p-3 flex flex-col justify-between">
