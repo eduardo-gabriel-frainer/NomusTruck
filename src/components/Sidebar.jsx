@@ -13,7 +13,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
   ];
 
   return (
-    <nav className="w-64 bg-white border-r h-screen p-6 flex flex-col">
+    <nav className="w-64 bg-white border-r border-gray-300 h-screen p-6 flex flex-col">
       <div className="mb-10 flex items-center space-x-2 font-bold text-lg">
         <div className="w-6 h-6 border rounded flex items-center justify-center">🛒</div>
         <span>Sistema de Vendas</span>
