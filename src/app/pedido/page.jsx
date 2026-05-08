@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import CardMenu from "../components/Card";
+import CardMenu from "../../components/Card";
 
 export default function Pedido() {
   const produtos = [

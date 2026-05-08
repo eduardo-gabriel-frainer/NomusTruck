@@ -22,22 +22,20 @@ export default function Home() {
         <div className="flex w-[360px] rounded-2xl bg-[#e5e5ea] p-1">
           <button
             onClick={() => setAbaAtiva("produtos")}
-            className={`flex-1 rounded-2xl py-2 text-sm font-semibold transition-all duration-200 ${
-              abaAtiva === "produtos"
+            className={`flex-1 rounded-2xl py-2 text-sm font-semibold transition-all duration-200 ${abaAtiva === "produtos"
                 ? "bg-white text-black shadow-sm"
                 : "text-gray-600"
-            }`}
+              }`}
           >
             Produtos
           </button>
 
           <button
             onClick={() => setAbaAtiva("insumos")}
-            className={`flex-1 rounded-2xl py-2 text-sm font-semibold transition-all duration-200 ${
-              abaAtiva === "insumos"
+            className={`flex-1 rounded-2xl py-2 text-sm font-semibold transition-all duration-200 ${abaAtiva === "insumos"
                 ? "bg-white text-black shadow-sm"
                 : "text-gray-600"
-            }`}
+              }`}
           >
             Insumos
           </button>
