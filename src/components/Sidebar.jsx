@@ -1,6 +1,7 @@
 "use client";
 
 import { FaHome, FaListAlt, FaShoppingCart, FaChartBar, FaClock } from "react-icons/fa";
+import Link from "next/link"; 
 
 export default function Sidebar({ currentPage }) {
   const menuItems = [
@@ -8,7 +9,7 @@ export default function Sidebar({ currentPage }) {
     { id: "cardapio", label: "Cardápio", icon: <FaListAlt />, href: "/cardapio", disabled: false },
     { id: "novo-pedido", label: "Novo Pedido", icon: <FaShoppingCart />, href: "/pedido", disabled: false },
     { id: "fila-pedidos", label: "Fila de Pedidos", icon: <FaClock />, href: "#", disabled: true },
-    { id: "relatorios", label: "Relatórios", icon: <FaChartBar />, href: "#", disabled: true },
+    { id: "relatorios", label: "Relatórios", icon: <FaChartBar />, href: "/relatorios", disabled: false },
     { id: "historico", label: "Histórico", icon: <FaClock />, href: "#", disabled: true },
   ];
 
@@ -26,19 +27,19 @@ export default function Sidebar({ currentPage }) {
           const isActive = currentPage === id;
           return (
             <li key={id}>
-              <a
+              <Link
                 href={disabled ? "#" : href}
                 className={`
                   flex items-center gap-3 rounded-md px-4 py-2
                   ${isActive ? "bg-black text-white" : "text-gray-700 hover:bg-gray-100"}
-                  ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
+                  ${disabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
                   transition-colors duration-200
                 `}
                 aria-disabled={disabled}
               >
                 <span className="text-base">{icon}</span>
                 <span className="text-sm font-medium">{label}</span>
-              </a>
+              </Link>
             </li>
           );
         })}
