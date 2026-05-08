@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import CardMenu from "@/components/Card";
+import CardMenu from "../../components/Card";
 
 export default function Pedido() {
   const produtos = [
@@ -13,30 +13,26 @@ export default function Pedido() {
     { id: 6, name: "Suco Natural", description: "Laranja ou maracujá", price: 8.5 },
   ];
 
-  // Estado do pedido
   const [pedido, setPedido] = useState([]);
 
-  // Função para adicionar item ao pedido
   const adicionarAoPedido = (produto) => {
     setPedido([...pedido, produto]);
   };
 
-  // Função para remover item do pedido
   const removerDoPedido = (indexParaRemover) => {
     setPedido(pedido.filter((_, index) => index !== indexParaRemover));
   };
 
-  // Calcula total
   const total = pedido.reduce((acc, item) => acc + item.price, 0);
 
   return (
     <div className="p-6 bg-white min-h-screen">
-      <h1 className="text-2xl font-bold mb-1 text-black">Novo Pedido 🍔</h1>
+      <h1 className="text-2xl font-bold mb-1 text-black">Novo Pedido</h1>
       <p className="text-gray-500 mb-6">Selecione os produtos do cardápio</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* CARDÁPIO */}
         <div className="md:col-span-2 border border-gray-300 rounded-xl p-4 bg-white">
+
           <h2 className="text-lg font-semibold mb-1 text-black">Cardápio</h2>
           <p className="text-sm text-gray-500 mb-4">
             Toque nos produtos para adicionar ao pedido
@@ -55,7 +51,6 @@ export default function Pedido() {
           </div>
         </div>
 
-        {/* RESUMO DO PEDIDO */}
         <div className="border border-gray-300 rounded-xl p-4 h-fit bg-white">
           <h2 className="text-lg font-semibold mb-4 text-black">Resumo do Pedido</h2>
 
