@@ -13,38 +13,47 @@ export default function Pedido() {
     { id: 6, name: "Suco Natural", description: "Laranja ou maracujá", price: 8.5 },
   ];
 
-  // Estado do pedido
   const [pedido, setPedido] = useState([]);
 
-  // Função para adicionar item ao pedido
   const adicionarAoPedido = (produto) => {
     setPedido([...pedido, produto]);
   };
 
-  // Função para remover item do pedido
   const removerDoPedido = (indexParaRemover) => {
     setPedido(pedido.filter((_, index) => index !== indexParaRemover));
   };
 
-  // Calcula total
   const total = pedido.reduce((acc, item) => acc + item.price, 0);
 
   return (
-    <div className="p-6 bg-white min-h-screen">
-      <h1 className="text-2xl font-bold mb-1 text-black">Novo Pedido 🍔</h1>
-      <p className="text-gray-500 mb-6">Selecione os produtos do cardápio</p>
+    <div className="min-h-screen bg-white p-5">
+      <h1 className="text-4xl font-bold text-black mb-1">
+        Novo Pedido
+      </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <p className="text-gray-500 mb-8">
+        Selecione os produtos do cardápio
+      </p>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
+
         {/* CARDÁPIO */}
-        <div className="md:col-span-2 border border-gray-300 rounded-xl p-4 bg-white">
-          <h2 className="text-lg font-semibold mb-1 text-black">Cardápio</h2>
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="bg-white border border-gray-200 rounded-2xl p-6">
+          <h2 className="text-xl font-semibold text-black mb-1">
+            Cardápio
+          </h2>
+
+          <p className="text-sm text-gray-500 mb-6">
             Toque nos produtos para adicionar ao pedido
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {produtos.map((item) => (
-              <div key={item.id} onClick={() => adicionarAoPedido(item)}>
+              <div
+                key={item.id}
+                onClick={() => adicionarAoPedido(item)}
+                className="cursor-pointer transition hover:scale-[1.01]"
+              >
                 <CardMenu
                   name={item.name}
                   description={item.description}
@@ -55,57 +64,94 @@ export default function Pedido() {
           </div>
         </div>
 
-        {/* RESUMO DO PEDIDO */}
-        <div className="border border-gray-300 rounded-xl p-4 h-fit bg-white">
-          <h2 className="text-lg font-semibold mb-4 text-black">Resumo do Pedido</h2>
+        {/* RESUMO */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+          <h2 className="text-xl font-semibold text-black mb-5">
+            Resumo do Pedido
+          </h2>
 
           {pedido.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center mb-4">Nenhum item adicionado</p>
+            <p className="text-sm text-gray-400 text-center mb-6">
+              Nenhum item adicionado
+            </p>
           ) : (
-            <ul className="mb-4">
+            <div className="space-y-3 mb-5">
               {pedido.map((item, index) => (
-                <li key={index} className="flex justify-between items-center text-sm mb-2">
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-xl p-3 flex items-center justify-between"
+                >
                   <div>
-                    <span>{item.name}</span> - <span>R$ {item.price.toFixed(2)}</span>
+                    <p className="font-semibold text-sm text-black">
+                      {item.name}
+                    </p>
+
+                    <p className="text-xs text-gray-500">
+                      1x R$ {item.price.toFixed(2)}
+                    </p>
                   </div>
-                  <button
-                    onClick={() => removerDoPedido(index)}
-                    className="bg-red-500 hover:bg-red-700 text-white text-xs px-2 py-1 rounded"
-                  >
-                    Remover
-                  </button>
-                </li>
+
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-black">
+                      R$ {item.price.toFixed(2)}
+                    </span>
+
+                    <button
+                      onClick={() => removerDoPedido(index)}
+                      className="text-red-500 hover:text-red-700 text-2xl w-10 h-10 flex items-center justify-center rounded-lg hover:bg-red-50 transition"
+                    >
+                      🗑
+                    </button>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
 
-          <hr className="mb-4" />
+          {/* INPUT */}
+          <div className="mb-4">
+            <label className="text-sm font-medium text-black block mb-2">
+              Nome do Cliente (opcional)
+            </label>
 
-          <label className="text-sm font-medium">Nome do Cliente (opcional)</label>
-          <input
-            type="text"
-            placeholder="Ex: João Silva"
-            className="w-full border border-gray-300 rounded-md p-2 mt-1 mb-4 text-sm bg-white text-black"
-          />
+            <input
+              type="text"
+              placeholder="Ex: João Silva"
+              className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300"
+            />
+          </div>
 
-          <label className="text-sm font-medium">Forma de Pagamento</label>
-          <select className="w-full border border-gray-300 rounded-md p-2 mt-1 mb-4 text-sm bg-white text-black">
-            <option>Dinheiro</option>
-            <option>Cartão</option>
-            <option>Pix</option>
-          </select>
+          {/* SELECT */}
+          <div className="mb-5">
+            <label className="text-sm font-medium text-black block mb-2">
+              Forma de Pagamento
+            </label>
 
-          <div className="flex justify-between text-sm mb-1">
+            <select className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300 text-black">
+              <option>💵 Dinheiro</option>
+              <option>💳 Cartão</option>
+              <option>📱 Pix</option>
+            </select>
+          </div>
+
+          {/* TOTAL */}
+          <div className="flex justify-between text-sm text-gray-500 mb-2">
             <span>Itens</span>
             <span>{pedido.length}</span>
           </div>
 
-          <div className="flex justify-between font-bold text-lg mb-4">
-            <span>Total</span>
-            <span>R$ {total.toFixed(2)}</span>
+          <div className="flex justify-between items-center mb-6">
+            <span className="text-2xl font-bold text-black">
+              Total
+            </span>
+
+            <span className="text-3xl font-bold text-black">
+              R$ {total.toFixed(2)}
+            </span>
           </div>
 
-          <button className="w-full bg-gray-400 hover:bg-gray-600 text-white py-2 rounded-lg transition-colors duration-200">
+          {/* BOTÃO */}
+          <button className="w-full bg-black hover:bg-neutral-800 text-white py-3 rounded-xl font-semibold transition">
             Finalizar Pedido
           </button>
         </div>

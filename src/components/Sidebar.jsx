@@ -14,12 +14,6 @@ export default function Sidebar({ currentPage }) {
 
   return (
     <nav className="w-64 bg-white border-r border-gray-300 h-screen p-6 flex flex-col">
-      {/* LOGO */}
-      <div className="mb-10 flex items-center space-x-2 font-bold text-lg">
-        <div className="w-6 h-6 border rounded flex items-center justify-center">🛒</div>
-        <span>Sistema de Vendas</span>
-      </div>
-
       {/* MENU */}
       <ul className="flex flex-col gap-3">
         {menuItems.map(({ id, label, icon, href, disabled }) => {
@@ -31,7 +25,6 @@ export default function Sidebar({ currentPage }) {
                 className={`
                   flex items-center gap-3 rounded-md px-4 py-2
                   ${isActive ? "bg-black text-white" : "text-gray-700 hover:bg-gray-100"}
-                  ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
                   transition-colors duration-200
                 `}
                 aria-disabled={disabled}
