@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import CardMenu from "../../components/Card";
+import { FaTrashAlt } from "react-icons/fa";
 
 export default function Pedido() {
   const produtos = [
@@ -26,15 +27,24 @@ export default function Pedido() {
   const total = pedido.reduce((acc, item) => acc + item.price, 0);
 
   return (
-    <div className="p-6 bg-white min-h-screen">
-      <h1 className="text-2xl font-bold mb-1 text-black">Novo Pedido 🍔</h1>
-      <p className="text-gray-500 mb-6">Selecione os produtos do cardápio</p>
+    <div className="min-h-screen p-5">
+      <h1 className="text-4xl font-bold text-black mb-1">
+        Novo Pedido
+      </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <p className="text-gray-500 mb-8">
+        Selecione os produtos do cardápio
+      </p>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_450px] gap-6 items-start">
+        
         {/* CARDÁPIO */}
-        <div className="md:col-span-2 border border-gray-300 rounded-xl p-4 bg-white">
-          <h2 className="text-lg font-semibold mb-1 text-black">Cardápio</h2>
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="bg-white border border-gray-200 rounded-2xl p-6">
+          <h2 className="text-xl font-semibold text-black mb-1">
+            Cardápio
+          </h2>
+
+          <p className="text-sm text-gray-500 mb-6">
             Toque nos produtos para adicionar ao pedido
           </p>
 
@@ -55,9 +65,11 @@ export default function Pedido() {
           </div>
         </div>
 
-        {/* RESUMO DO PEDIDO */}
-        <div className="border border-gray-300 rounded-xl p-4 h-fit bg-white">
-          <h2 className="text-lg font-semibold mb-4 text-black">Resumo do Pedido</h2>
+        {/* RESUMO */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+          <h2 className="text-xl font-semibold text-black mb-5">
+            Resumo do Pedido
+          </h2>
 
           {pedido.length === 0 ? (
             <p className="text-sm text-gray-400 text-center mb-6">
@@ -87,9 +99,9 @@ export default function Pedido() {
 
                     <button
                       onClick={() => removerDoPedido(index)}
-                      className="text-red-500 hover:text-red-700 text-2xl w-10 h-10 flex items-center justify-center rounded-lg hover:bg-red-50 transition"
+                      className="text-red-500 hover:text-red-700 text-sm"
                     >
-                      🗑
+                      <FaTrashAlt></FaTrashAlt>
                     </button>
                   </div>
                 </div>
