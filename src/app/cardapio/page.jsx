@@ -8,7 +8,7 @@ export default function Home() {
   const [abrirModal, setAbrirModal] = useState(false);
 
   return (
-    <main className="min-h-screen bg-[#f6f6f7] p-6">
+    <main className="min-h-screen bg-[#ffffff] p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#111827]">Cardápio</h1>
 
@@ -17,12 +17,11 @@ export default function Home() {
         </p>
       </div>
 
-      {/* TOGGLE */}
       <div className="flex items-center justify-between">
-        <div className="flex w-[360px] rounded-2xl bg-[#e5e5ea] p-1">
+        <div className="flex w-[280px] rounded-2xl bg-[#e5e5ea] p-1">
           <button
             onClick={() => setAbaAtiva("produtos")}
-            className={`flex-1 rounded-2xl py-2 text-sm font-semibold transition-all duration-200 ${abaAtiva === "produtos"
+            className={`flex-1 rounded-2xl py-1 text-sm font-semibold transition-all duration-200 ${abaAtiva === "produtos"
                 ? "bg-white text-black shadow-sm"
                 : "text-gray-600"
               }`}
@@ -41,7 +40,6 @@ export default function Home() {
           </button>
         </div>
 
-        {/* BOTÃO */}
         <button
           onClick={() => setAbrirModal(true)}
           className="flex items-center gap-2 rounded-xl bg-[#05051a] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
@@ -51,7 +49,6 @@ export default function Home() {
         </button>
       </div>
 
-      {/* LISTAGEM */}
       <section className="mt-12 rounded-2xl border border-gray-200 bg-white p-6">
         <div className="mb-6">
           <h2 className="text-lg font-bold text-[#111827]">
@@ -75,7 +72,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MODAL */}
       {abrirModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
           <div className="w-full max-w-[640px] rounded-2xl bg-white p-7 shadow-2xl">
@@ -103,9 +99,8 @@ export default function Home() {
               </button>
             </div>
 
-            {/* FORM */}
             <div className="space-y-5">
-              {/* NOME */}
+
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#111827]">
                   {abaAtiva === "produtos"
@@ -124,7 +119,6 @@ export default function Home() {
                 />
               </div>
 
-              {/* UNIDADE */}
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#111827]">
                   Unidade de Medida *
@@ -137,7 +131,6 @@ export default function Home() {
                 />
               </div>
 
-              {/* CAMPOS DUPLOS */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-[#111827]">
@@ -164,7 +157,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* BOTÕES */}
               <div className="flex items-center gap-4 pt-2">
                 <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#05051a] py-3 text-sm font-semibold text-white transition hover:opacity-90">
                   <Save size={18} />
