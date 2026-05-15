@@ -1,47 +1,146 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import { Plus, X, Save } from "lucide-react";
+import { Plus } from "lucide-react";
+
+import { useProdutoStore } from "../../store/useProdutoStore";
+import { TabSwitcher } from "../../components/cardapio/TabSwitcher";
+import { InventorySection } from "../../components/cardapio/InventorySection";
+import { ProductSection } from "../../components/cardapio/ProductSection";
+import { CardapioModal } from "../../components/cardapio/CardapioModal";
 
 export default function Home() {
-  const [abaAtiva, setAbaAtiva] = useState("produtos");
+  const [abaAtiva, setAbaAtiva] = useState("insumos");
   const [abrirModal, setAbrirModal] = useState(false);
 
+  const {
+    insumos,
+    produtos,
+    adicionarProduto,
+    removerProduto,
+    adicionarInsumo,
+    removerInsumo,
+    alterarQuantidadeInsumo
+  } = useProdutoStore();
+
+  const [nomeInsumo, setNomeInsumo] = useState("");
+  const [unidadeMedida, setUnidadeMedida] = useState("");
+  const [quantidadeEstoque, setQuantidadeEstoque] = useState("");
+  const [estoqueMinimo, setEstoqueMinimo] = useState("");
+
+  const [nomeProduto, setNomeProduto] = useState("");
+  const [precoProduto, setPrecoProduto] = useState("");
+  const [descricaoProduto, setDescricaoProduto] = useState("");
+  const [insumosDoNovoProduto, setInsumosDoNovoProduto] = useState([]);
+
+  function abrirModalDeCadastro() {
+    limparCamposInsumo();
+    limparCamposProduto();
+    setAbrirModal(true);
+  }
+
+  function limparCamposInsumo() {
+    setNomeInsumo("");
+    setUnidadeMedida("");
+    setQuantidadeEstoque("");
+    setEstoqueMinimo("");
+  }
+
+  function limparCamposProduto() {
+    setNomeProduto("");
+    setPrecoProduto("");
+    setDescricaoProduto("");
+    setInsumosDoNovoProduto([]);
+  }
+
+  function cadastrarInsumo() {
+    if (!nomeInsumo || !unidadeMedida || !quantidadeEstoque || !estoqueMinimo) {
+      alert("Preencha todos os campos do insumo");
+      return;
+    }
+
+    adicionarInsumo({
+      id: Date.now(),
+      nome: nomeInsumo,
+      unidade: unidadeMedida,
+      quantidade: Number(quantidadeEstoque),
+      minimo: Number(estoqueMinimo)
+    });
+
+    limparCamposInsumo();
+    setAbrirModal(false);
+  }
+
+  function cadastrarProduto() {
+    if (!nomeProduto || !precoProduto) {
+      alert("Preencha o nome e o preço do produto");
+      return;
+    }
+
+    adicionarProduto({
+      id: Date.now(),
+      nome: nomeProduto,
+      description: descricaoProduto,
+      price: Number(precoProduto),
+      insumosUtilizados: insumosDoNovoProduto.filter((ins) => ins.insumoId !== "")
+    });
+
+    limparCamposProduto();
+    setAbrirModal(false);
+  }
+
+  function removerInsumoConfirmado(id) {
+    if (confirm("Tem certeza que deseja excluir este insumo?")) {
+      removerInsumo(id);
+    }
+  }
+
+  function excluirProduto(id) {
+    if (confirm("Tem certeza que deseja excluir este produto?")) {
+      removerProduto(id);
+    }
+  }
+
+  function adicionarLinhaDeInsumoNoProduto() {
+    const primeiroInsumoDisponivel = insumos[0]?.id || "";
+
+    setInsumosDoNovoProduto((current) => [
+      ...current,
+      {
+        insumoId: primeiroInsumoDisponivel,
+        quantidadeNecessaria: 1
+      }
+    ]);
+  }
+
+  function atualizarLinhaDeInsumo(index, campo, valor) {
+    setInsumosDoNovoProduto((current) => {
+      const novo = [...current];
+      novo[index] = {
+        ...novo[index],
+        [campo]: campo === "insumoId" ? valor : Number(valor)
+      };
+      return novo;
+    });
+  }
+
+  function removerLinhaDeInsumo(index) {
+    setInsumosDoNovoProduto((current) => current.filter((_, i) => i !== index));
+  }
+
   return (
-    <main className="min-h-screen bg-[#ffffff] p-6">
+    <main className="min-h-screen bg-[#f8f9fa] p-6 font-sans">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#111827]">Cardápio</h1>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Gerencie produtos e insumos do food truck
-        </p>
+        <p className="mt-1 text-sm text-gray-500">Gerencie produtos e insumos do food truck</p>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex w-[280px] rounded-2xl bg-[#e5e5ea] p-1">
-          <button
-            onClick={() => setAbaAtiva("produtos")}
-            className={`flex-1 rounded-2xl py-1 text-sm font-semibold transition-all duration-200 ${abaAtiva === "produtos"
-                ? "bg-white text-black shadow-sm"
-                : "text-gray-600"
-              }`}
-          >
-            Produtos
-          </button>
-
-          <button
-            onClick={() => setAbaAtiva("insumos")}
-            className={`flex-1 rounded-2xl py-2 text-sm font-semibold transition-all duration-200 ${abaAtiva === "insumos"
-                ? "bg-white text-black shadow-sm"
-                : "text-gray-600"
-              }`}
-          >
-            Insumos
-          </button>
-        </div>
+      <div className="mb-8 flex items-center justify-between">
+        <TabSwitcher abaAtiva={abaAtiva} onChange={setAbaAtiva} />
 
         <button
-          onClick={() => setAbrirModal(true)}
+          type="button"
+          onClick={abrirModalDeCadastro}
           className="flex items-center gap-2 rounded-xl bg-[#05051a] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
         >
           <Plus size={18} />
@@ -49,15 +148,12 @@ export default function Home() {
         </button>
       </div>
 
-      <section className="mt-12 rounded-2xl border border-gray-200 bg-white p-6">
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="mb-6">
           <h2 className="text-lg font-bold text-[#111827]">
-            {abaAtiva === "produtos"
-              ? "Produtos Cadastrados"
-              : "Insumos Cadastrados"}{" "}
-            (0)
+            {abaAtiva === "produtos" ? "Produtos Cadastrados" : "Insumos Cadastrados"} (
+            {abaAtiva === "produtos" ? produtos.length : insumos.length})
           </h2>
-
           <p className="text-sm text-gray-500">
             {abaAtiva === "produtos"
               ? "Produtos disponíveis no cardápio"
@@ -65,115 +161,47 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="flex h-[400px] items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[#fafafa]">
-          <p className="text-sm text-gray-400">
-            Nenhum {abaAtiva === "produtos" ? "produto" : "insumo"} cadastrado
-          </p>
-        </div>
+        {abaAtiva === "insumos" ? (
+          <InventorySection
+            insumos={insumos}
+            onAlterarQuantidade={alterarQuantidadeInsumo}
+            onRemoverInsumo={removerInsumoConfirmado}
+          />
+        ) : (
+          <ProductSection
+            produtos={produtos}
+            insumos={insumos}
+            onExcluirProduto={excluirProduto}
+          />
+        )}
       </section>
 
       {abrirModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-          <div className="w-full max-w-[640px] rounded-2xl bg-white p-7 shadow-2xl">
-            {/* HEADER */}
-            <div className="mb-6 flex items-start justify-between">
-              <div>
-                <h2 className="text-3xl font-bold text-[#111827]">
-                  {abaAtiva === "produtos"
-                    ? "Novo Produto"
-                    : "Novo Insumo"}
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  {abaAtiva === "produtos"
-                    ? "Cadastre um novo produto no cardápio"
-                    : "Cadastre um novo insumo no estoque"}
-                </p>
-              </div>
-
-              <button
-                onClick={() => setAbrirModal(false)}
-                className="text-gray-500 transition hover:text-black"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            <div className="space-y-5">
-
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#111827]">
-                  {abaAtiva === "produtos"
-                    ? "Nome do Produto *"
-                    : "Nome do Insumo *"}
-                </label>
-
-                <input
-                  type="text"
-                  placeholder={
-                    abaAtiva === "produtos"
-                      ? "Ex: X-Burger Artesanal"
-                      : "Ex: Pão de Hambúrguer"
-                  }
-                  className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-[#05051a]"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#111827]">
-                  Unidade de Medida *
-                </label>
-
-                <input
-                  type="text"
-                  placeholder="Ex: un, kg, ml, fatia, folha"
-                  className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-[#05051a]"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#111827]">
-                    Quantidade em Estoque
-                  </label>
-
-                  <input
-                    type="number"
-                    placeholder="0"
-                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-[#05051a]"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#111827]">
-                    Estoque Mínimo
-                  </label>
-
-                  <input
-                    type="number"
-                    placeholder="0"
-                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-[#05051a]"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 pt-2">
-                <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#05051a] py-3 text-sm font-semibold text-white transition hover:opacity-90">
-                  <Save size={18} />
-                  Cadastrar
-                </button>
-
-                <button
-                  onClick={() => setAbrirModal(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-6 py-3 text-sm font-semibold text-[#111827] transition hover:bg-gray-100"
-                >
-                  <X size={18} />
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CardapioModal
+          abaAtiva={abaAtiva}
+          insumos={insumos}
+          insumosDoNovoProduto={insumosDoNovoProduto}
+          nomeInsumo={nomeInsumo}
+          unidadeMedida={unidadeMedida}
+          quantidadeEstoque={quantidadeEstoque}
+          estoqueMinimo={estoqueMinimo}
+          nomeProduto={nomeProduto}
+          precoProduto={precoProduto}
+          descricaoProduto={descricaoProduto}
+          onClose={() => setAbrirModal(false)}
+          onChangeNomeInsumo={setNomeInsumo}
+          onChangeUnidadeMedida={setUnidadeMedida}
+          onChangeQuantidadeEstoque={setQuantidadeEstoque}
+          onChangeEstoqueMinimo={setEstoqueMinimo}
+          onSaveInsumo={cadastrarInsumo}
+          onChangeNomeProduto={setNomeProduto}
+          onChangePrecoProduto={setPrecoProduto}
+          onChangeDescricaoProduto={setDescricaoProduto}
+          onAddInsumoLine={adicionarLinhaDeInsumoNoProduto}
+          onUpdateInsumoLine={atualizarLinhaDeInsumo}
+          onRemoveInsumoLine={removerLinhaDeInsumo}
+          onSaveProduto={cadastrarProduto}
+        />
       )}
     </main>
   );

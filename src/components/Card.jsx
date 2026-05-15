@@ -13,7 +13,7 @@ export default function CardMenu({ name, description, price }) {
             </p>
 
             <p className="font-bold text-lg mt-2 text-black">
-                R$ {price.toFixed(2)}
+                R$ {price?.toFixed(2)}
             </p>
 
         </div>
