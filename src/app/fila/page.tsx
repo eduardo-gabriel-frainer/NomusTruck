@@ -14,7 +14,9 @@ export default function FilaPedidos() {
     {
       titulo: "Aguardando",
       corTexto: "text-amber-500",
-      corBg: "bg-amber-500/10",
+      border: "border border-amber-300",
+      background: "bg-amber-50",
+      idColor: "bg-amber-500",
       icone: <FaClock className="text-amber-500" size={16} />,
       lista: aguardando,
       mensagemVazia: "Nenhum pedido aguardando",
@@ -24,7 +26,9 @@ export default function FilaPedidos() {
     {
       titulo: "Preparando",
       corTexto: "text-blue-500",
-      corBg: "bg-blue-500/10",
+      border: "border border-blue-300",
+      background: "bg-blue-50",
+      idColor: "bg-blue-500",
       icone: <FaChalkboardTeacher className="text-blue-500" size={16} />,
       lista: preparando,
       mensagemVazia: "Nenhum pedido em preparo",
@@ -34,7 +38,9 @@ export default function FilaPedidos() {
     {
       titulo: "Prontos",
       corTexto: "text-emerald-500",
-      corBg: "bg-emerald-500/10",
+      border: "border border-emerald-300",
+      background: "bg-emerald-50",
+      idColor: "bg-emerald-500",
       icone: <FaCheckCircle className="text-emerald-500" size={16} />,
       lista: prontos,
       mensagemVazia: "Nenhum pedido pronto",
@@ -69,7 +75,7 @@ export default function FilaPedidos() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {colunas.map((col, idx) => (
           <div key={idx} className="flex flex-col gap-4">
-            
+
             <div className="flex items-center gap-2 px-1">
               {col.icone}
               <h2 className="font-bold text-black">
@@ -84,31 +90,38 @@ export default function FilaPedidos() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col gap-3">
+              <div className={`flex flex-col gap-3 rounded-2xl`}>
                 {col.lista.map((pedido) => (
-                  <div 
-                    key={pedido.id} 
-                    className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:border-gray-300 transition"
+                  <div
+                    key={pedido.id}
+                    className={`${col.background} ${col.border} rounded-2xl p-5 shadow-sm transition`}
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-bold text-black text-base">
-                        {pedido.cliente || "Cliente Balcão"}
-                      </h3>
-                      <span className="text-sm font-semibold text-gray-500">
-                        R$ {pedido.total?.toFixed(2)}
-                      </span>
+                    <div className={`flex mb-2 `}>
+                      <div className={`text-white mr-2 rounded-full px-2 ${col.idColor}`}>
+                        {pedido.id}
+                      </div>
+                      {pedido.cliente || "Cliente Balcão"}
                     </div>
 
-                    <div className="text-xs text-gray-500 mb-4 space-y-1">
+                    <div className="text-x mb-4 space-y-1">
                       {pedido.itens?.map((item, i) => (
                         <p key={i}>{item.quantidade}x {item.nome}</p>
                       ))}
                     </div>
 
+                    <hr className="mt-2 border-gray-700" />
+
+                    <div className="flex justify-between items-center mt-2">
+                      <span>Total</span>
+                      <span className="text-lg font-semibold">
+                        R$ {pedido.total?.toFixed(2)}
+                      </span>
+
+                    </div>
 
                     <button
                       onClick={() => alterarStatusPedido(pedido.id, col.proximoStatus)}
-                      className={`w-full py-2 px-4 rounded-xl text-xs font-semibold border transition ${col.corTexto} ${col.corBg} hover:opacity-80`}
+                      className={`w-full py-3 mt-3 px-4 rounded-md text-xs font-semibold transition text-white bg-black hover:opacity-80`}
                     >
                       {col.textoBotao}
                     </button>
