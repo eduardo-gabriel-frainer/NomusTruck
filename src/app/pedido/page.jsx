@@ -13,6 +13,8 @@ export default function Pedido() {
   const [pedido, setPedido] = useState([]);
   const [nomeCliente, setNomeCliente] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("💵 Dinheiro");
+  
+  const [erroNome, setErroNome] = useState(false);
 
   const adicionarAoPedido = (produto) => {
     const itemExistente = pedido.find((item) => item.id === produto.id);
@@ -53,9 +55,9 @@ export default function Pedido() {
 
   const lidarComFinalizarPedido = () => {
 
-    if (nomeCliente == ''){
-      alert('Preencha o nome do cliente')
-      return
+    if (nomeCliente.trim() === '') {
+      setErroNome(true);
+      return;
     }
 
     if (pedido.length === 0) return;
@@ -68,7 +70,7 @@ export default function Pedido() {
     }
 
     const novoPedidoParaFila = {
-      cliente: nomeCliente.trim() || "Cliente Balcão",
+      cliente: nomeCliente.trim(),
       formaPagamento: formaPagamento,
       total: total,
       itens: pedido.map(item => ({
@@ -84,6 +86,7 @@ export default function Pedido() {
     setPedido([]);
     setNomeCliente("");
     setFormaPagamento("💵 Dinheiro");
+    setErroNome(false);
   };
 
   return (
@@ -183,10 +186,22 @@ export default function Pedido() {
             <input
               type="text"
               value={nomeCliente}
-              onChange={(e) => setNomeCliente(e.target.value)}
+              onChange={(e) => {
+                setNomeCliente(e.target.value);
+                if (erroNome) setErroNome(false); 
+              }}
               placeholder="Ex: João Silva"
-              className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300 text-black"
+              className={`w-full bg-gray-100 border rounded-xl p-3 text-sm outline-none text-black transition-all ${
+                erroNome 
+                  ? "border-red-500 focus:border-red-500 ring-1 ring-red-500" 
+                  : "border-gray-100 focus:border-gray-300"
+              }`}
             />
+            {erroNome && (
+              <span className="text-xs font-medium text-red-500 mt-1 block">
+                Nome do cliente é obrigatório
+              </span>
+            )}
           </div>
 
           <div className="mb-5">
