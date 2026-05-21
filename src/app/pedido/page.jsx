@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import CardMenu from "../../components/Card";
-import { FaTrashAlt, FaPlus, FaMinus } from "react-icons/fa";
+import { FaTrashAlt, FaPlus, FaMinus, FaCheckCircle } from "react-icons/fa";
 
 import { useProdutoStore } from "../../store/useProdutoStore";
 import { usePedidoStore } from "../../store/usePedidoStore";
@@ -15,6 +15,7 @@ export default function Pedido() {
   const [formaPagamento, setFormaPagamento] = useState("💵 Dinheiro");
   
   const [erroNome, setErroNome] = useState(false);
+  const [mostrarToast, setMostrarToast] = useState(false);
 
   const adicionarAoPedido = (produto) => {
     const itemExistente = pedido.find((item) => item.id === produto.id);
@@ -81,7 +82,11 @@ export default function Pedido() {
 
     adicionarPedidoA_Fila(novoPedidoParaFila);
 
-    alert("🎉 Pedido enviado para a cozinha com sucesso!");
+    setMostrarToast(true);
+    
+    setTimeout(() => {
+      setMostrarToast(false);
+    }, 4000);
     
     setPedido([]);
     setNomeCliente("");
@@ -90,7 +95,7 @@ export default function Pedido() {
   };
 
   return (
-    <div className="min-h-screen p-5 bg-[#f8f9fa]">
+    <div className="min-h-screen p-5 bg-[#f8f9fa] relative">
       <h1 className="text-4xl font-bold text-black mb-1">Novo Pedido</h1>
       <p className="text-gray-500 mb-8">Selecione os produtos do cardápio</p>
 
@@ -236,6 +241,16 @@ export default function Pedido() {
           </button>
         </div>
       </div>
+
+      {mostrarToast && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 min-w-[280px] shadow-xl animate-fade-in transition-all">
+          <FaCheckCircle className="text-emerald-600 flex-shrink-0" size={22} />
+          <div>
+            <p className="text-base font-semibold text-emerald-900 leading-tight">Pedido registrado!</p>
+            <p className="text-sm text-emerald-700/80 mt-0.5">Pedido adicionado à fila</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
