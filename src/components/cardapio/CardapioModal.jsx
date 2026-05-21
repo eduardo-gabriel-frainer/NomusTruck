@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react"; 
 import { Plus, Save, X } from "lucide-react";
 
 export function CardapioModal({
@@ -13,6 +14,7 @@ export function CardapioModal({
     nomeProduto,
     precoProduto,
     descricaoProduto,
+    quantidadeEstoqueProduto,
     onClose,
     onChangeNomeInsumo,
     onChangeUnidadeMedida,
@@ -22,11 +24,14 @@ export function CardapioModal({
     onChangeNomeProduto,
     onChangePrecoProduto,
     onChangeDescricaoProduto,
+    onChangeQuantidadeEstoqueProduto,
     onAddInsumoLine,
     onUpdateInsumoLine,
     onRemoveInsumoLine,
     onSaveProduto
 }) {
+    const [tipoProdutoInterno, setTipoProdutoInterno] = useState("PRODUZIDO");
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
             <div className="max-h-[85vh] w-full max-w-[550px] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
@@ -140,65 +145,96 @@ export function CardapioModal({
                             />
                         </div>
 
-                        <div className="border-t border-gray-100 pt-4">
-                            <div className="mb-2 flex items-center justify-between">
-                                <label className="text-xs font-bold uppercase text-gray-600">
-                                    Insumos Necessários / Receita
-                                </label>
-                                <button
-                                    type="button"
-                                    onClick={onAddInsumoLine}
-                                    className="flex items-center gap-1 text-xs font-bold"
-                                >
-                                    <Plus size={14} />
-                                    Adicionar Insumo
-                                </button>
-                            </div>
-
-                            {insumosDoNovoProduto.length === 0 ? (
-                                <p className="rounded-lg bg-gray-50 p-3 text-center text-xs italic text-gray-400">
-                                    Nenhum insumo atrelado a este produto ainda.
-                                </p>
-                            ) : (
-                                <div className="max-h-[180px] space-y-2 overflow-y-auto pr-1">
-                                    {insumosDoNovoProduto.map((item, index) => (
-                                        <div key={index} className="flex items-center gap-2">
-                                            <select
-                                                value={item.insumoId}
-                                                onChange={(e) => onUpdateInsumoLine(index, "insumoId", e.target.value)}
-                                                className="flex-1 rounded-xl border border-gray-300 bg-white p-2 text-sm outline-none focus:border-black"
-                                            >
-                                                <option value="" disabled>
-                                                    Selecione um insumo...
-                                                </option>
-                                                {insumos.map((ins) => (
-                                                    <option key={ins.id} value={ins.id}>
-                                                        {ins.nome} ({ins.unidade})
-                                                    </option>
-                                                ))}
-                                            </select>
-
-                                            <input
-                                                type="number"
-                                                placeholder="Qtd"
-                                                min="1"
-                                                value={item.quantidadeNecessaria}
-                                                onChange={(e) => onUpdateInsumoLine(index, "quantidadeNecessaria", e.target.value)}
-                                                className="w-20 rounded-xl border border-gray-300 p-2 text-center text-sm outline-none focus:border-black"
-                                            />
-
-                                            <button
-                                                type="button"
-                                                onClick={() => onRemoveInsumoLine(index)}
-                                                className="p-1 text-gray-400 hover:text-red-500"
-                                            >
-                                                <X size={18} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                        <div>
+                            <label className="text-xs font-bold uppercase text-gray-600">Tipo de Produto *</label>
+                            <select
+                                value={tipoProdutoInterno}
+                                onChange={(e) => setTipoProdutoInterno(e.target.value)}
+                                className="mt-1 w-full rounded-xl border border-gray-300 bg-white p-3 text-sm outline-none focus:border-black"
+                            >
+                                <option value="REVENDA">REVENDA (estoque próprio)</option>
+                                <option value="PRODUZIDO">PRODUZIDO (usa insumos)</option>
+                            </select>
                         </div>
+
+                        {tipoProdutoInterno === "REVENDA" ? (
+                            <div>
+                                <label className="text-xs font-bold uppercase text-gray-600">Quantidade em Estoque *</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    placeholder="0"
+                                    value={quantidadeEstoqueProduto}
+                                    onChange={(e) => onChangeQuantidadeEstoqueProduto(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (["-", "+", "e", "E"].includes(e.key)) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    className="mt-1 w-full rounded-xl border border-gray-300 p-3 outline-none focus:border-black"
+                                />
+                            </div>
+                        ) : (
+                            <div className="border-t border-gray-100 pt-4">
+                                <div className="mb-2 flex items-center justify-between">
+                                    <label className="text-xs font-bold uppercase text-gray-600">
+                                        Insumos Necessários / Receita
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={onAddInsumoLine}
+                                        className="flex items-center gap-1 text-xs font-bold"
+                                    >
+                                        <Plus size={14} />
+                                        Adicionar Insumo
+                                    </button>
+                                </div>
+
+                                {insumosDoNovoProduto.length === 0 ? (
+                                    <p className="rounded-lg bg-gray-50 p-3 text-center text-xs italic text-gray-400">
+                                        Nenhum insumo atrelado a este produto ainda.
+                                    </p>
+                                ) : (
+                                    <div className="max-h-[180px] space-y-2 overflow-y-auto pr-1">
+                                        {insumosDoNovoProduto.map((item, index) => (
+                                            <div key={index} className="flex items-center gap-2">
+                                                <select
+                                                    value={item.insumoId}
+                                                    onChange={(e) => onUpdateInsumoLine(index, "insumoId", e.target.value)}
+                                                    className="flex-1 rounded-xl border border-gray-300 bg-white p-2 text-sm outline-none focus:border-black"
+                                                >
+                                                    <option value="" disabled>
+                                                        Selecione um insumo...
+                                                    </option>
+                                                    {insumos.map((ins) => (
+                                                        <option key={ins.id} value={ins.id}>
+                                                            {ins.nome} ({ins.unidade})
+                                                        </option>
+                                                    ))}
+                                                </select>
+
+                                                <input
+                                                    type="number"
+                                                    placeholder="Qtd"
+                                                    min="1"
+                                                    value={item.quantidadeNecessaria}
+                                                    onChange={(e) => onUpdateInsumoLine(index, "quantidadeNecessaria", e.target.value)}
+                                                    className="w-20 rounded-xl border border-gray-300 p-2 text-center text-sm outline-none focus:border-black"
+                                                />
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => onRemoveInsumoLine(index)}
+                                                    className="p-1 text-gray-400 hover:text-red-500"
+                                                >
+                                                    <X size={18} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         <button
                             type="button"

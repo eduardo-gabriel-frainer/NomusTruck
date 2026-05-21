@@ -32,6 +32,9 @@ export default function Home() {
   const [precoProduto, setPrecoProduto] = useState("");
   const [descricaoProduto, setDescricaoProduto] = useState("");
   const [insumosDoNovoProduto, setInsumosDoNovoProduto] = useState([]);
+  
+  const [tipoProduto, setTipoProduto] = useState("PRODUZIDO");
+  const [quantidadeEstoqueProduto, setQuantidadeEstoqueProduto] = useState("");
 
   function abrirModalDeCadastro() {
     limparCamposInsumo();
@@ -51,6 +54,8 @@ export default function Home() {
     setPrecoProduto("");
     setDescricaoProduto("");
     setInsumosDoNovoProduto([]);
+    setTipoProduto("PRODUZIDO");
+    setQuantidadeEstoqueProduto("");
   }
 
   function cadastrarInsumo() {
@@ -76,13 +81,19 @@ export default function Home() {
       alert("Preencha o nome e o preço do produto");
       return;
     }
+    if (tipoProduto === "REVENDA" && !quantidadeEstoqueProduto) {
+      alert("Preencha a quantidade em estoque para produtos de revenda");
+      return;
+    }
 
     adicionarProduto({
       id: Date.now(),
       nome: nomeProduto,
       description: descricaoProduto,
       price: Number(precoProduto),
-      insumosUtilizados: insumosDoNovoProduto.filter((ins) => ins.insumoId !== "")
+      tipo: tipoProduto, 
+      estoque: tipoProduto === "REVENDA" ? Number(quantidadeEstoqueProduto) : 0, 
+      insumosUtilizados: tipoProduto === "PRODUZIDO" ? insumosDoNovoProduto.filter((ins) => ins.insumoId !== "") : []
     });
 
     limparCamposProduto();
@@ -201,6 +212,10 @@ export default function Home() {
           onUpdateInsumoLine={atualizarLinhaDeInsumo}
           onRemoveInsumoLine={removerLinhaDeInsumo}
           onSaveProduto={cadastrarProduto}
+          tipoProduto={tipoProduto}
+          onChangeTipoProduto={setTipoProduto}
+          quantidadeEstoqueProduto={quantidadeEstoqueProduto}
+          onChangeQuantidadeEstoqueProduto={setQuantidadeEstoqueProduto}
         />
       )}
     </main>
