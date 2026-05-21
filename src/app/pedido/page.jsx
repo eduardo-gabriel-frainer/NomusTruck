@@ -5,10 +5,14 @@ import CardMenu from "../../components/Card";
 import { FaTrashAlt, FaPlus, FaMinus } from "react-icons/fa";
 
 import { useProdutoStore } from "../../store/useProdutoStore";
+import { usePedidoStore } from "../../store/usePedidoStore";
 
 export default function Pedido() {
   const { produtos, subtrairInsumosDoPedido } = useProdutoStore();
+  const { adicionarPedidoA_Fila } = usePedidoStore(); 
   const [pedido, setPedido] = useState([]);
+  const [nomeCliente, setNomeCliente] = useState("");
+  const [formaPagamento, setFormaPagamento] = useState("💵 Dinheiro");
 
   const adicionarAoPedido = (produto) => {
     const itemExistente = pedido.find((item) => item.id === produto.id);
@@ -44,6 +48,9 @@ export default function Pedido() {
     setPedido(pedido.filter((item) => item.id !== id));
   };
 
+  const total = pedido.reduce((acc, item) => acc + item.price * item.quantidade, 0);
+  const totalItens = pedido.reduce((acc, item) => acc + item.quantidade, 0);
+
   const lidarComFinalizarPedido = () => {
     if (pedido.length === 0) return;
 
@@ -54,12 +61,24 @@ export default function Pedido() {
       return;
     }
 
-    alert("Pedido finalizado com sucesso! Insumos descontados do estoque.");
-    setPedido([]);
-  };
+    const novoPedidoParaFila = {
+      cliente: nomeCliente.trim() || "Cliente Balcão",
+      formaPagamento: formaPagamento,
+      total: total,
+      itens: pedido.map(item => ({
+        nome: item.nome,
+        quantidade: item.quantidade
+      }))
+    };
 
-  const total = pedido.reduce((acc, item) => acc + item.price * item.quantidade, 0);
-  const totalItens = pedido.reduce((acc, item) => acc + item.quantidade, 0);
+    adicionarPedidoA_Fila(novoPedidoParaFila);
+
+    alert("🎉 Pedido enviado para a cozinha com sucesso!");
+    
+    setPedido([]);
+    setNomeCliente("");
+    setFormaPagamento("💵 Dinheiro");
+  };
 
   return (
     <div className="min-h-screen p-5 bg-[#f8f9fa]">
@@ -157,17 +176,23 @@ export default function Pedido() {
             <label className="text-sm font-medium text-black block mb-2">Nome do Cliente (opcional)</label>
             <input
               type="text"
+              value={nomeCliente}
+              onChange={(e) => setNomeCliente(e.target.value)}
               placeholder="Ex: João Silva"
-              className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300"
+              className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300 text-black"
             />
           </div>
 
           <div className="mb-5">
             <label className="text-sm font-medium text-black block mb-2">Forma de Pagamento</label>
-            <select className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300 text-black">
-              <option>💵 Dinheiro</option>
-              <option>💳 Cartão</option>
-              <option>📱 Pix</option>
+            <select 
+              value={formaPagamento}
+              onChange={(e) => setFormaPagamento(e.target.value)}
+              className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300 text-black"
+            >
+              <option value="💵 Dinheiro">💵 Dinheiro</option>
+              <option value="💳 Cartão">💳 Cartão</option>
+              <option value="📱 Pix">📱 Pix</option>
             </select>
           </div>
 
