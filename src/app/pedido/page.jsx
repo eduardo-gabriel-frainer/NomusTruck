@@ -173,7 +173,7 @@ export default function Pedido() {
           )}
 
           <div className="mb-4">
-            <label className="text-sm font-medium text-black block mb-2">Nome do Cliente (opcional)</label>
+            <label className="text-sm font-medium text-black block mb-2">Nome do Cliente *</label>
             <input
               type="text"
               value={nomeCliente}
@@ -208,7 +208,7 @@ export default function Pedido() {
 
           <button
             onClick={lidarComFinalizarPedido}
-            disabled={pedido.length === 0}
+            disabled={pedido.length === 0 || nomeCliente == ''}
             className="w-full bg-black hover:bg-neutral-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-semibold transition"
           >
             Finalizar Pedido
