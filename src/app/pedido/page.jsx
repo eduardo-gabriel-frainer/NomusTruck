@@ -52,6 +52,12 @@ export default function Pedido() {
   const totalItens = pedido.reduce((acc, item) => acc + item.quantidade, 0);
 
   const lidarComFinalizarPedido = () => {
+
+    if (nomeCliente == ''){
+      alert('Preencha o nome do cliente')
+      return
+    }
+
     if (pedido.length === 0) return;
 
     const resultado = subtrairInsumosDoPedido(pedido);
@@ -208,7 +214,7 @@ export default function Pedido() {
 
           <button
             onClick={lidarComFinalizarPedido}
-            disabled={pedido.length === 0 || nomeCliente == ''}
+            disabled={pedido.length === 0}
             className="w-full bg-black hover:bg-neutral-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-semibold transition"
           >
             Finalizar Pedido
