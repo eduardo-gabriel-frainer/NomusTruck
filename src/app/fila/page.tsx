@@ -96,11 +96,15 @@ export default function FilaPedidos() {
                     key={pedido.id}
                     className={`${col.background} ${col.border} rounded-2xl p-5 shadow-sm transition`}
                   >
-                    <div className={`flex mb-2 `}>
-                      <div className={`text-white mr-2 rounded-full px-2 ${col.idColor}`}>
-                        {pedido.id}
+                    <div className={`flex justify-between mb-3`}>
+                      <div className="flex">
+                        <div className={`text-white mr-2 rounded-full px-2 ${col.idColor}`}>
+                          {pedido.id}
+                        </div>
+                        {pedido.cliente || "Cliente Balcão"}
                       </div>
-                      {pedido.cliente || "Cliente Balcão"}
+
+                      {pedido.hora}
                     </div>
 
                     <div className="text-x mb-4 space-y-1">

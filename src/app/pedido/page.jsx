@@ -9,11 +9,11 @@ import { usePedidoStore } from "../../store/usePedidoStore";
 
 export default function Pedido() {
   const { produtos, subtrairInsumosDoPedido } = useProdutoStore();
-  const { adicionarPedidoA_Fila } = usePedidoStore(); 
+  const { adicionarPedidoA_Fila } = usePedidoStore();
   const [pedido, setPedido] = useState([]);
   const [nomeCliente, setNomeCliente] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("💵 Dinheiro");
-  
+
   const [erroNome, setErroNome] = useState(false);
   const [mostrarToast, setMostrarToast] = useState(false);
 
@@ -74,20 +74,24 @@ export default function Pedido() {
       cliente: nomeCliente.trim(),
       formaPagamento: formaPagamento,
       total: total,
+      hora: new Date().toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
       itens: pedido.map(item => ({
         nome: item.nome,
-        quantidade: item.quantidade
+        quantidade: item.quantidade,
       }))
     };
 
     adicionarPedidoA_Fila(novoPedidoParaFila);
 
     setMostrarToast(true);
-    
+
     setTimeout(() => {
       setMostrarToast(false);
     }, 4000);
-    
+
     setPedido([]);
     setNomeCliente("");
     setFormaPagamento("💵 Dinheiro");
@@ -163,7 +167,7 @@ export default function Pedido() {
                       >
                         <FaMinus size={10} />
                       </button>
-                      
+
                       <button
                         onClick={() => adicionarAoPedido(item)}
                         className="px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 border-l border-r border-gray-200 transition"
@@ -193,14 +197,13 @@ export default function Pedido() {
               value={nomeCliente}
               onChange={(e) => {
                 setNomeCliente(e.target.value);
-                if (erroNome) setErroNome(false); 
+                if (erroNome) setErroNome(false);
               }}
               placeholder="Ex: João Silva"
-              className={`w-full bg-gray-100 border rounded-xl p-3 text-sm outline-none text-black transition-all ${
-                erroNome 
-                  ? "border-red-500 focus:border-red-500 ring-1 ring-red-500" 
+              className={`w-full bg-gray-100 border rounded-xl p-3 text-sm outline-none text-black transition-all ${erroNome
+                  ? "border-red-500 focus:border-red-500 ring-1 ring-red-500"
                   : "border-gray-100 focus:border-gray-300"
-              }`}
+                }`}
             />
             {erroNome && (
               <span className="text-xs font-medium text-red-500 mt-1 block">
@@ -211,7 +214,7 @@ export default function Pedido() {
 
           <div className="mb-5">
             <label className="text-sm font-medium text-black block mb-2">Forma de Pagamento</label>
-            <select 
+            <select
               value={formaPagamento}
               onChange={(e) => setFormaPagamento(e.target.value)}
               className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300 text-black"
