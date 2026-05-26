@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa"; // Adicionado FaExclamationTriangle para remoção
 
 import { useProdutoStore } from "../../store/useProdutoStore";
 import { TabSwitcher } from "../../components/cardapio/TabSwitcher";
@@ -39,6 +39,7 @@ export default function Home() {
 
   const [mostrarToast, setMostrarToast] = useState(false);
   const [mensagemToast, setMensagemToast] = useState("");
+  const [tipoToast, setTipoToast] = useState("sucesso"); 
 
   function abrirModalDeCadastro() {
     limparCamposInsumo();
@@ -62,8 +63,9 @@ export default function Home() {
     setQuantidadeEstoqueProduto("");
   }
 
-  function dispararToast(mensagem) {
+  function dispararToast(mensagem, tipo = "sucesso") {
     setMensagemToast(mensagem);
+    setTipoToast(tipo);
     setMostrarToast(true);
     setTimeout(() => {
       setMostrarToast(false);
@@ -87,7 +89,7 @@ export default function Home() {
     limparCamposInsumo();
     setAbrirModal(false);
     
-    dispararToast("Insumo cadastrado com sucesso!");
+    dispararToast("Insumo cadastrado com sucesso!", "sucesso");
   }
 
   function cadastrarProduto() {
@@ -113,18 +115,20 @@ export default function Home() {
     limparCamposProduto();
     setAbrirModal(false);
 
-    dispararToast("Produto cadastrado com sucesso!");
+    dispararToast("Produto cadastrado com sucesso!", "sucesso");
   }
 
   function removerInsumoConfirmado(id) {
     if (confirm("Tem certeza que deseja excluir este insumo?")) {
       removerInsumo(id);
+      dispararToast("Insumo removido com sucesso.", "erro"); 
     }
   }
 
   function excluirProduto(id) {
     if (confirm("Tem certeza que deseja excluir este produto?")) {
       removerProduto(id);
+      dispararToast("Produto removido com sucesso.", "erro");
     }
   }
 
@@ -236,13 +240,23 @@ export default function Home() {
       )}
 
       {mostrarToast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 min-w-[280px] shadow-xl animate-fade-in transition-all">
-          <FaCheckCircle className="text-emerald-600 flex-shrink-0" size={22} />
-          <div>
-            <p className="text-base font-semibold text-emerald-900 leading-tight">Sucesso!</p>
-            <p className="text-sm text-emerald-700/80 mt-0.5">{mensagemToast}</p>
+        tipoToast === "sucesso" ? (
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 min-w-[280px] shadow-xl animate-fade-in transition-all">
+            <FaCheckCircle className="text-emerald-600 flex-shrink-0" size={22} />
+            <div>
+              <p className="text-base font-semibold text-emerald-900 leading-tight">Sucesso!</p>
+              <p className="text-sm text-emerald-700/80 mt-0.5">{mensagemToast}</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-4 bg-red-50 border border-red-200 rounded-2xl px-5 py-4 min-w-[280px] shadow-xl animate-fade-in transition-all">
+            <FaExclamationTriangle className="text-red-600 flex-shrink-0" size={22} />
+            <div>
+              <p className="text-base font-semibold text-red-900 leading-tight">Removido</p>
+              <p className="text-sm text-red-700/80 mt-0.5">{mensagemToast}</p>
+            </div>
+          </div>
+        )
       )}
     </main>
   );
