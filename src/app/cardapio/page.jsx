@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { FaCheckCircle } from "react-icons/fa";
 
 import { useProdutoStore } from "../../store/useProdutoStore";
 import { TabSwitcher } from "../../components/cardapio/TabSwitcher";
@@ -36,6 +37,9 @@ export default function Home() {
   const [tipoProduto, setTipoProduto] = useState("PRODUZIDO");
   const [quantidadeEstoqueProduto, setQuantidadeEstoqueProduto] = useState("");
 
+  const [mostrarToast, setMostrarToast] = useState(false);
+  const [mensagemToast, setMensagemToast] = useState("");
+
   function abrirModalDeCadastro() {
     limparCamposInsumo();
     limparCamposProduto();
@@ -58,6 +62,14 @@ export default function Home() {
     setQuantidadeEstoqueProduto("");
   }
 
+  function dispararToast(mensagem) {
+    setMensagemToast(mensagem);
+    setMostrarToast(true);
+    setTimeout(() => {
+      setMostrarToast(false);
+    }, 3000);
+  }
+
   function cadastrarInsumo() {
     if (!nomeInsumo || !unidadeMedida || !quantidadeEstoque || !estoqueMinimo) {
       alert("Preencha todos os campos do insumo");
@@ -74,6 +86,8 @@ export default function Home() {
 
     limparCamposInsumo();
     setAbrirModal(false);
+    
+    dispararToast("Insumo cadastrado com sucesso!");
   }
 
   function cadastrarProduto() {
@@ -98,6 +112,8 @@ export default function Home() {
 
     limparCamposProduto();
     setAbrirModal(false);
+
+    dispararToast("Produto cadastrado com sucesso!");
   }
 
   function removerInsumoConfirmado(id) {
@@ -140,7 +156,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f8f9fa] p-6 font-sans">
+    <main className="min-h-screen bg-[#f8f9fa] p-6 font-sans relative">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#111827]">Produtos</h1>
         <p className="mt-1 text-sm text-gray-500">Gerencie produtos e insumos do food truck</p>
@@ -217,6 +233,16 @@ export default function Home() {
           quantidadeEstoqueProduto={quantidadeEstoqueProduto}
           onChangeQuantidadeEstoqueProduto={setQuantidadeEstoqueProduto}
         />
+      )}
+
+      {mostrarToast && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 min-w-[280px] shadow-xl animate-fade-in transition-all">
+          <FaCheckCircle className="text-emerald-600 flex-shrink-0" size={22} />
+          <div>
+            <p className="text-base font-semibold text-emerald-900 leading-tight">Sucesso!</p>
+            <p className="text-sm text-emerald-700/80 mt-0.5">{mensagemToast}</p>
+          </div>
+        </div>
       )}
     </main>
   );
