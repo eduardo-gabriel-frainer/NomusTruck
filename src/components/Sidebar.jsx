@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Sidebar({ currentPage }) {
   const menuItems = [
     { id: "inicio", label: "Início", icon: <FaHome />, href: "/", disabled: false },
-    { id: "cardapio", label: "Cardápio", icon: <FaListAlt />, href: "/cardapio", disabled: false },
+    { id: "cardapio", label: "Produtos", icon: <FaListAlt />, href: "/cardapio", disabled: false },
     { id: "novo-pedido", label: "Novo Pedido", icon: <FaShoppingCart />, href: "/pedido", disabled: false },
     { id: "fila-pedidos", label: "Fila de Pedidos", icon: <FaClock />, href: "/fila", disabled: false },
     { id: "relatorios", label: "Relatórios", icon: <FaChartBar />, href: "/relatorios", disabled: false },

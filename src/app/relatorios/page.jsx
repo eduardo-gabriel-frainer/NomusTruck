@@ -9,22 +9,18 @@ export default function Relatorios() {
     setPedidos(dados);
   }, []);
 
-  //  CÁLCULOS 
   const totalVendido = pedidos.reduce((acc, p) => acc + (p.total || 0), 0);
   const totalPedidos = pedidos.length;
   const ticketMedio = totalPedidos > 0 ? totalVendido / totalPedidos : 0;
 
-  // Formas de Pagamento
   const pagamentos = {};
   pedidos.forEach((p) => {
     pagamentos[p.pagamento] = (pagamentos[p.pagamento] || 0) + 1;
   });
 
-  //  Produtos Mais Vendidos - lógica
   const contagemProdutos = {};
   pedidos.forEach((p) => {
     p.itens?.forEach((item) => {
-      // Usa item.name ou item.nome dependendo de como você salvou
       const nomeProd = item.name || item.nome;
       contagemProdutos[nomeProd] = (contagemProdutos[nomeProd] || 0) + 1;
     });
@@ -37,7 +33,6 @@ export default function Relatorios() {
 
   return (
     <div className="p-8 bg-[#fcfcfc] min-h-screen text-black font-sans">
-      {/* HEADER */}
       <div className="flex justify-between items-start mb-8">
         <div>
           <h1 className="text-2xl font-bold">Relatórios</h1>
@@ -51,7 +46,6 @@ export default function Relatorios() {
         </div>
       </div>
 
-      {/* CARDS DE MÉTRICAS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm relative text-left">
           <span className="absolute top-6 right-6 text-gray-400 text-xs">$</span>
@@ -75,7 +69,6 @@ export default function Relatorios() {
         </div>
       </div>
 
-      {/* SEÇÕES DO MEIO */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div className="bg-white border border-gray-100 rounded-xl p-8 shadow-sm">
           <h3 className="text-[15px] font-bold text-left">Formas de Pagamento</h3>
@@ -101,7 +94,6 @@ export default function Relatorios() {
         </div>
       </div>
 
-      {/* PRODUTOS MAIS VENDIDOS */}
       <div className="bg-white border border-gray-100 rounded-xl p-8 shadow-sm w-full">
         <div className="text-left">
           <h3 className="text-[15px] font-bold">Produtos Mais Vendidos</h3>

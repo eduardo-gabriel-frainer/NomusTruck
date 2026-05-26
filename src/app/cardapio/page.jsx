@@ -142,7 +142,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f9fa] p-6 font-sans">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#111827]">Cardápio</h1>
+        <h1 className="text-3xl font-bold text-[#111827]">Produtos</h1>
         <p className="mt-1 text-sm text-gray-500">Gerencie produtos e insumos do food truck</p>
       </div>
 
