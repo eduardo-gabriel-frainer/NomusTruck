@@ -1,14 +1,41 @@
 'use client'
 
+import { useState } from "react"; // Adicionado apenas o useState
 import { usePedidoStore } from "../../store/usePedidoStore";
 import { FaClock, FaChalkboardTeacher, FaCheckCircle } from "react-icons/fa";
 
 export default function FilaPedidos() {
   const { pedidosFila, alterarStatusPedido } = usePedidoStore();
 
+  // 1. ÚNICO ESTADO ADICIONADO: Para controlar a pilha de mensagens
+  const [toasts, setToasts] = useState([]);
+
   const aguardando = pedidosFila.filter(p => p.status === "AGUARDANDO");
   const preparando = pedidosFila.filter(p => p.status === "PREPARANDO");
   const prontos = pedidosFila.filter(p => p.status === "PRONTO");
+
+  // 2. FUNÇÃO ADICIONADA: Para criar e empilhar o toast com sumiço automático
+  const dispararToast = (titulo, subtitulo) => {
+    const id = Date.now();
+    setToasts((prev) => [{ id, titulo, subtitulo }, ...prev]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4000);
+  };
+
+  // 3. FUNÇÃO ADICIONADA: Intercepta o clique do seu botão para ver qual era o status original
+  const lidarComClique = (pedidoId, proximoStatus) => {
+    if (proximoStatus === "PREPARANDO") {
+      dispararToast("Pedido em preparação", `Pedido #${pedidoId}`);
+    } else if (proximoStatus === "PRONTO") {
+      dispararToast("Pedido pronto! 🔔", `Pedido #${pedidoId}`);
+    } else if (proximoStatus === "FINALIZADO") {
+      dispararToast("Pedido entregue!", `Pedido #${pedidoId}`);
+    }
+    
+    // Executa a sua função original exatamente como estava
+    alterarStatusPedido(pedidoId, proximoStatus);
+  };
 
   const colunas = [
     {
@@ -50,7 +77,7 @@ export default function FilaPedidos() {
   ];
 
   return (
-    <div className="min-h-screen p-8 bg-[#f8f9fa]">
+    <div className="min-h-screen p-8 bg-[#f8f9fa] relative overflow-x-hidden">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-black mb-1">
           Fila de Pedidos
@@ -123,8 +150,9 @@ export default function FilaPedidos() {
 
                     </div>
 
+                    {/* MODIFICADO APENAS AQUI: trocado o onClick original pela nossa função intermediária */}
                     <button
-                      onClick={() => alterarStatusPedido(pedido.id, col.proximoStatus)}
+                      onClick={() => lidarComClique(pedido.id, col.proximoStatus)}
                       className={`w-full py-3 mt-3 px-4 rounded-md text-xs font-semibold transition text-white bg-black hover:opacity-80`}
                     >
                       {col.textoBotao}
@@ -135,6 +163,37 @@ export default function FilaPedidos() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* 4. ADICIONADO AQUI NO FINAL: O container de Toasts empilhados que abre no :hover */}
+      <div className="group fixed bottom-6 right-6 z-50 flex flex-col-reverse items-end pointer-events-none">
+        {toasts.map((toast, index) => {
+          if (index > 2) return null; // Limita visualmente em 3 na pilha
+
+          return (
+            <div
+              key={toast.id}
+              style={{
+                transform: `translateY(${index * 45}px) scale(${1 - index * 0.04})`,
+                zIndex: 100 - index,
+              }}
+              className={`
+                pointer-events-auto
+                flex items-center gap-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 min-w-[300px] shadow-xl 
+                transition-all duration-300 ease-in-out
+                
+                group-hover:!transform-none group-hover:mb-3 first:group-hover:mb-0
+                ${index === 0 ? "opacity-100" : "opacity-90 group-hover:opacity-100"}
+              `}
+            >
+              <FaCheckCircle className="text-emerald-600 flex-shrink-0" size={22} />
+              <div>
+                <p className="text-base font-semibold text-emerald-900 leading-tight">{toast.titulo}</p>
+                <p className="text-sm text-emerald-700/80 mt-0.5">{toast.subtitulo}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
