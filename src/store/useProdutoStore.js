@@ -48,7 +48,6 @@ export const useProdutoStore = create((set, get) => ({
 
   subtrairInsumosDoPedido: (pedido) => {
     const { insumos } = get();
-
     const necessidades = {};
 
     pedido.forEach((itemDoPedido) => {
@@ -98,7 +97,16 @@ export const useProdutoStore = create((set, get) => ({
   })),
   adicionarInsumo: (novoInsumo) => set((state) => ({ insumos: [...state.insumos, novoInsumo] })),
   removerInsumo: (id) => set((state) => ({ insumos: state.insumos.filter(item => item.id !== id) })),
+  
+  editarInsumo: (id, dadosAtualizados) => set((state) => ({
+    insumos: state.insumos.map(item => item.id === id ? { ...item, ...dadosAtualizados } : item)
+  })),
+
   setProdutos: (novosProdutos) => set({ produtos: novosProdutos }),
   adicionarProduto: (novoProduto) => set((state) => ({ produtos: [...state.produtos, novoProduto] })),
-  removerProduto: (id) => set((state) => ({ produtos: state.produtos.filter(item => item.id !== id) }))
+  removerProduto: (id) => set((state) => ({ produtos: state.produtos.filter(item => item.id !== id) })),
+  
+  editarProduto: (id, dadosAtualizados) => set((state) => ({
+    produtos: state.produtos.map(item => item.id === id ? { ...item, ...dadosAtualizados } : item)
+  }))
 }));

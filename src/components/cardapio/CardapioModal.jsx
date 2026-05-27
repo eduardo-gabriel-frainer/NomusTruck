@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react"; 
 import { Plus, Save, X } from "lucide-react";
 
 export function CardapioModal({
     abaAtiva,
+    idSendoEditado,
     insumos,
     insumosDoNovoProduto,
     nomeInsumo,
@@ -28,16 +28,23 @@ export function CardapioModal({
     onAddInsumoLine,
     onUpdateInsumoLine,
     onRemoveInsumoLine,
-    onSaveProduto
+    onSaveProduto,
+    tipoProduto = "PRODUZIDO",
+    onChangeTipoProduto
 }) {
-    const [tipoProdutoInterno, setTipoProdutoInterno] = useState("PRODUZIDO");
+
+    const handleTipoChange = (valor) => {
+        if (onChangeTipoProduto) onChangeTipoProduto(valor);
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
             <div className="max-h-[85vh] w-full max-w-[550px] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
                 <div className="mb-5 flex items-start justify-between">
                     <h2 className="text-xl font-bold text-[#111827]">
-                        {abaAtiva === "produtos" ? "Novo Produto" : "Novo Insumo"}
+                        {abaAtiva === "produtos" 
+                            ? (idSendoEditado ? "Editar Produto" : "Novo Produto") 
+                            : (idSendoEditado ? "Editar Insumo" : "Novo Insumo")}
                     </h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-black">
                         <X size={20} />
@@ -148,8 +155,8 @@ export function CardapioModal({
                         <div>
                             <label className="text-xs font-bold uppercase text-gray-600">Tipo de Produto *</label>
                             <select
-                                value={tipoProdutoInterno}
-                                onChange={(e) => setTipoProdutoInterno(e.target.value)}
+                                value={tipoProduto}
+                                onChange={(e) => handleTipoChange(e.target.value)}
                                 className="mt-1 w-full rounded-xl border border-gray-300 bg-white p-3 text-sm outline-none focus:border-black"
                             >
                                 <option value="REVENDA">REVENDA (estoque próprio)</option>
@@ -157,7 +164,7 @@ export function CardapioModal({
                             </select>
                         </div>
 
-                        {tipoProdutoInterno === "REVENDA" ? (
+                        {tipoProduto === "REVENDA" ? (
                             <div>
                                 <label className="text-xs font-bold uppercase text-gray-600">Quantidade em Estoque *</label>
                                 <input

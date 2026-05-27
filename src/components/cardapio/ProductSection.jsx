@@ -6,7 +6,7 @@ function formatPrice(value) {
   return `R$ ${value?.toFixed(2) ?? "0.00"}`;
 }
 
-export function ProductSection({ produtos, insumos, onExcluirProduto }) {
+export function ProductSection({ produtos, insumos, onExcluirProduto, onEditarProduto }) {
   if (produtos.length === 0) {
     return (
       <div className="flex h-40 items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[#fafafa]">
@@ -56,6 +56,7 @@ export function ProductSection({ produtos, insumos, onExcluirProduto }) {
           <div className="flex items-center gap-2">
             <button
               type="button"
+              onClick={() => onEditarProduto(produto)}
               className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100"
             >
               <Pencil size={18} />

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa"; // Adicionado FaExclamationTriangle para remoção
+import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 
 import { useProdutoStore } from "../../store/useProdutoStore";
 import { TabSwitcher } from "../../components/cardapio/TabSwitcher";
@@ -14,6 +14,8 @@ export default function Home() {
   const [abaAtiva, setAbaAtiva] = useState("insumos");
   const [abrirModal, setAbrirModal] = useState(false);
 
+  const [idSendoEditado, setIdSendoEditado] = useState(null);
+
   const {
     insumos,
     produtos,
@@ -21,7 +23,9 @@ export default function Home() {
     removerProduto,
     adicionarInsumo,
     removerInsumo,
-    alterarQuantidadeInsumo
+    alterarQuantidadeInsumo,
+    editarInsumo,   
+    editarProduto,  
   } = useProdutoStore();
 
   const [nomeInsumo, setNomeInsumo] = useState("");
@@ -42,8 +46,29 @@ export default function Home() {
   const [tipoToast, setTipoToast] = useState("sucesso"); 
 
   function abrirModalDeCadastro() {
+    setIdSendoEditado(null); 
     limparCamposInsumo();
     limparCamposProduto();
+    setAbrirModal(true);
+  }
+
+  function prepararEdicaoInsumo(insumo) {
+    setIdSendoEditado(insumo.id);
+    setNomeInsumo(insumo.nome);
+    setUnidadeMedida(insumo.unidade);
+    setQuantidadeEstoque(String(insumo.quantidade));
+    setEstoqueMinimo(String(insumo.minimo));
+    setAbrirModal(true);
+  }
+
+  function prepararEdicaoProduto(produto) {
+    setIdSendoEditado(produto.id);
+    setNomeProduto(produto.nome);
+    setDescricaoProduto(produto.description || "");
+    setPrecoProduto(String(produto.price));
+    setTipoProduto(produto.tipo || "PRODUZIDO");
+    setQuantidadeEstoqueProduto(String(produto.estoque || 0));
+    setInsumosDoNovoProduto(produto.insumosUtilizados || []);
     setAbrirModal(true);
   }
 
@@ -78,18 +103,25 @@ export default function Home() {
       return;
     }
 
-    adicionarInsumo({
-      id: Date.now(),
+    const dadosInsumo = {
+      id: id,
       nome: nomeInsumo,
       unidade: unidadeMedida,
       quantidade: Number(quantidadeEstoque),
       minimo: Number(estoqueMinimo)
-    });
+    };
+
+    if (idSendoEditado) {
+      editarInsumo(idSendoEditado, dadosInsumo);
+      dispararToast("Insumo atualizado com sucesso!", "sucesso");
+    } else {
+      console.log()
+      adicionarInsumo({ id: dadosInsumo.id , ...dadosInsumo });
+      dispararToast("Insumo cadastrado com sucesso!", "sucesso");
+    }
 
     limparCamposInsumo();
     setAbrirModal(false);
-    
-    dispararToast("Insumo cadastrado com sucesso!", "sucesso");
   }
 
   function cadastrarProduto() {
@@ -102,20 +134,27 @@ export default function Home() {
       return;
     }
 
-    adicionarProduto({
-      id: Date.now(),
+    const dadosProduto = {
       nome: nomeProduto,
       description: descricaoProduto,
       price: Number(precoProduto),
       tipo: tipoProduto, 
       estoque: tipoProduto === "REVENDA" ? Number(quantidadeEstoqueProduto) : 0, 
       insumosUtilizados: tipoProduto === "PRODUZIDO" ? insumosDoNovoProduto.filter((ins) => ins.insumoId !== "") : []
-    });
+    };
+
+    console.log(dadosProduto)
+
+    if (idSendoEditado) {
+      editarProduto(idSendoEditado, dadosProduto);
+      dispararToast("Produto atualizado com sucesso!", "sucesso");
+    } else {
+      adicionarProduto({ id: Date.now(), ...dadosProduto });
+      dispararToast("Produto cadastrado com sucesso!", "sucesso");
+    }
 
     limparCamposProduto();
     setAbrirModal(false);
-
-    dispararToast("Produto cadastrado com sucesso!", "sucesso");
   }
 
   function removerInsumoConfirmado(id) {
@@ -149,7 +188,7 @@ export default function Home() {
       const novo = [...current];
       novo[index] = {
         ...novo[index],
-        [campo]: campo === "insumoId" ? valor : Number(valor)
+        [campo]: Number(valor)
       };
       return novo;
     });
@@ -197,12 +236,14 @@ export default function Home() {
             insumos={insumos}
             onAlterarQuantidade={alterarQuantidadeInsumo}
             onRemoverInsumo={removerInsumoConfirmado}
+            onEditarInsumo={prepararEdicaoInsumo} 
           />
         ) : (
           <ProductSection
             produtos={produtos}
             insumos={insumos}
             onExcluirProduto={excluirProduto}
+            onEditarProduto={prepararEdicaoProduto} 
           />
         )}
       </section>
@@ -210,6 +251,7 @@ export default function Home() {
       {abrirModal && (
         <CardapioModal
           abaAtiva={abaAtiva}
+          idSendoEditado={idSendoEditado} 
           insumos={insumos}
           insumosDoNovoProduto={insumosDoNovoProduto}
           nomeInsumo={nomeInsumo}

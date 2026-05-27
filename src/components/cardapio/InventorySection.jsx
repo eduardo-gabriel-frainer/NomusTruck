@@ -2,7 +2,7 @@
 
 import { Minus, Plus, Pencil, Trash2 } from "lucide-react";
 
-export function InventorySection({ insumos, onAlterarQuantidade, onRemoverInsumo }) {
+export function InventorySection({ insumos, onAlterarQuantidade, onRemoverInsumo, onEditarInsumo }) {
   if (insumos.length === 0) {
     return (
       <div className="flex h-40 items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[#fafafa]">
@@ -64,7 +64,8 @@ export function InventorySection({ insumos, onAlterarQuantidade, onRemoverInsumo
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100"
+              onClick={() => onEditarInsumo(insumo)}
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 dynamic-edit-btn"
             >
               <Pencil size={18} />
             </button>
