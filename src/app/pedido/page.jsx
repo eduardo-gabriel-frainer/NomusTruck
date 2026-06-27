@@ -100,7 +100,7 @@ export default function Pedido() {
 
   return (
     <div className="min-h-screen p-5 bg-[#f8f9fa] relative">
-      <h1 className="text-4xl font-bold text-black mb-1">Novo Pedido</h1>
+      <h1 className="text-3xl font-bold text-black mb-1">Novo Pedido</h1>
       <p className="text-gray-500 mb-8">Selecione os produtos do cardápio</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_450px] gap-6 items-start">
@@ -201,8 +201,8 @@ export default function Pedido() {
               }}
               placeholder="Ex: João Silva"
               className={`w-full bg-gray-100 border rounded-xl p-3 text-sm outline-none text-black transition-all ${erroNome
-                  ? "border-red-500 focus:border-red-500 ring-1 ring-red-500"
-                  : "border-gray-100 focus:border-gray-300"
+                ? "border-red-500 focus:border-red-500 ring-1 ring-red-500"
+                : "border-gray-100 focus:border-gray-300"
                 }`}
             />
             {erroNome && (
@@ -220,7 +220,8 @@ export default function Pedido() {
               className="w-full bg-gray-100 border border-gray-100 rounded-xl p-3 text-sm outline-none focus:border-gray-300 text-black"
             >
               <option value="💵 Dinheiro">💵 Dinheiro</option>
-              <option value="💳 Cartão">💳 Cartão</option>
+              <option value="💳 Cartão Débito">💳 Cartão Débito</option>
+              <option value="💳 Cartão Crédito">💳 Cartão Crédito</option>
               <option value="📱 Pix">📱 Pix</option>
             </select>
           </div>
