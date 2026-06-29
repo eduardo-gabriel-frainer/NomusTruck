@@ -24,8 +24,8 @@ export default function Home() {
     adicionarInsumo,
     removerInsumo,
     alterarQuantidadeInsumo,
-    editarInsumo,   
-    editarProduto,  
+    editarInsumo,
+    editarProduto,
   } = useProdutoStore();
 
   const [nomeInsumo, setNomeInsumo] = useState("");
@@ -37,16 +37,16 @@ export default function Home() {
   const [precoProduto, setPrecoProduto] = useState("");
   const [descricaoProduto, setDescricaoProduto] = useState("");
   const [insumosDoNovoProduto, setInsumosDoNovoProduto] = useState([]);
-  
+
   const [tipoProduto, setTipoProduto] = useState("PRODUZIDO");
   const [quantidadeEstoqueProduto, setQuantidadeEstoqueProduto] = useState("");
 
   const [mostrarToast, setMostrarToast] = useState(false);
   const [mensagemToast, setMensagemToast] = useState("");
-  const [tipoToast, setTipoToast] = useState("sucesso"); 
+  const [tipoToast, setTipoToast] = useState("sucesso");
 
   function abrirModalDeCadastro() {
-    setIdSendoEditado(null); 
+    setIdSendoEditado(null);
     limparCamposInsumo();
     limparCamposProduto();
     setAbrirModal(true);
@@ -104,7 +104,7 @@ export default function Home() {
     }
 
     const dadosInsumo = {
-      id: id,
+      id: Date.now(),
       nome: nomeInsumo,
       unidade: unidadeMedida,
       quantidade: Number(quantidadeEstoque),
@@ -116,7 +116,7 @@ export default function Home() {
       dispararToast("Insumo atualizado com sucesso!", "sucesso");
     } else {
       console.log()
-      adicionarInsumo({ id: dadosInsumo.id , ...dadosInsumo });
+      adicionarInsumo({ id: dadosInsumo.id, ...dadosInsumo });
       dispararToast("Insumo cadastrado com sucesso!", "sucesso");
     }
 
@@ -138,8 +138,8 @@ export default function Home() {
       nome: nomeProduto,
       description: descricaoProduto,
       price: Number(precoProduto),
-      tipo: tipoProduto, 
-      estoque: tipoProduto === "REVENDA" ? Number(quantidadeEstoqueProduto) : 0, 
+      tipo: tipoProduto,
+      estoque: tipoProduto === "REVENDA" ? Number(quantidadeEstoqueProduto) : 0,
       insumosUtilizados: tipoProduto === "PRODUZIDO" ? insumosDoNovoProduto.filter((ins) => ins.insumoId !== "") : []
     };
 
@@ -160,7 +160,7 @@ export default function Home() {
   function removerInsumoConfirmado(id) {
     if (confirm("Tem certeza que deseja excluir este insumo?")) {
       removerInsumo(id);
-      dispararToast("Insumo removido com sucesso.", "erro"); 
+      dispararToast("Insumo removido com sucesso.", "erro");
     }
   }
 
@@ -236,14 +236,14 @@ export default function Home() {
             insumos={insumos}
             onAlterarQuantidade={alterarQuantidadeInsumo}
             onRemoverInsumo={removerInsumoConfirmado}
-            onEditarInsumo={prepararEdicaoInsumo} 
+            onEditarInsumo={prepararEdicaoInsumo}
           />
         ) : (
           <ProductSection
             produtos={produtos}
             insumos={insumos}
             onExcluirProduto={excluirProduto}
-            onEditarProduto={prepararEdicaoProduto} 
+            onEditarProduto={prepararEdicaoProduto}
           />
         )}
       </section>
@@ -251,7 +251,7 @@ export default function Home() {
       {abrirModal && (
         <CardapioModal
           abaAtiva={abaAtiva}
-          idSendoEditado={idSendoEditado} 
+          idSendoEditado={idSendoEditado}
           insumos={insumos}
           insumosDoNovoProduto={insumosDoNovoProduto}
           nomeInsumo={nomeInsumo}
